@@ -1,17 +1,37 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom"; 
 import {
   createUserWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
+  RecaptchaVerifier,
+  signInWithPhoneNumber,
 } from "firebase/auth";
-import { auth } from "../firebaseConfig"; // Pastikan Anda memiliki file konfigurasi Firebase
+import { auth } from "../firebaseConfig";
 
 const CreateAccount = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [phone, setPhone] = useState("");
+  const [otp, setOtp] = useState("");
+  const [isOtpSent, setIsOtpSent] = useState(false);
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate(); // Inisialisasi useNavigate
+  const navigate = useNavigate();
+
+  const initializeRecaptcha = () => {
+    if (!window.recaptchaVerifier) {
+      window.recaptchaVerifier = new RecaptchaVerifier(
+        "recaptcha-container",
+        {
+          size: "invisible",
+          callback: () => {
+            console.log("Recaptcha verified");
+          },
+        },
+        auth
+      );
+    }
+  };
 
   // Handle Registration with Email and Password
   const handleRegister = async () => {
@@ -19,7 +39,7 @@ const CreateAccount = () => {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
       alert("Account created successfully!");
-      navigate("/Dashboard"); // Arahkan ke halaman dashboard
+      navigate("/Dashboard");
     } catch (error) {
       alert(`Registration failed: ${error.message}`);
     } finally {
@@ -34,9 +54,42 @@ const CreateAccount = () => {
       const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider);
       alert("Signed in with Google!");
-      navigate("/Dashboard"); // Arahkan ke halaman dashboard
+      navigate("/Dashboard");
     } catch (error) {
       alert(`Google Sign-In failed: ${error.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle Phone Number Registration
+  const handlePhoneSignUp = async () => {
+    setLoading(true);
+    initializeRecaptcha();
+    const appVerifier = window.recaptchaVerifier;
+
+    try {
+      const confirmationResult = await signInWithPhoneNumber(auth, phone, appVerifier);
+      window.confirmationResult = confirmationResult;
+      setIsOtpSent(true);
+      alert("OTP sent to your phone!");
+    } catch (error) {
+      alert(`Failed to send OTP: ${error.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Verify OTP
+  const handleVerifyOtp = async () => {
+    setLoading(true);
+    try {
+      const confirmationResult = window.confirmationResult;
+      await confirmationResult.confirm(otp);
+      alert("Phone number verified and account created!");
+      navigate("/Dashboard");
+    } catch (error) {
+      alert(`OTP verification failed: ${error.message}`);
     } finally {
       setLoading(false);
     }
@@ -48,7 +101,7 @@ const CreateAccount = () => {
         <div className="p-5">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-3">
-              <img src="/logo.png" alt="Logo" className="h-10" />
+              <img src="logo.png" alt="Logo" className="h-10" />
               <h1 className="text-2xl font-bold font-custom text-textPrimary">
                 SahabatDiri
               </h1>
@@ -60,9 +113,9 @@ const CreateAccount = () => {
           <div className="flex-1 p-10">
             <div className="bg-blue-200 p-5 rounded-lg shadow-inner">
               <h2 className="text-lg font-semibold text-textPrimary mb-3">
-                Care ur selff
+             
               </h2>
-              <img src="/illustration.png" alt="Illustration" className="h-40 mx-auto" />
+              <img src="/Logo.png" alt="Logo" className="h-40 mx-auto" />
             </div>
           </div>
 
@@ -70,6 +123,7 @@ const CreateAccount = () => {
             <h2 className="text-xl font-semibold text-textPrimary mb-5">
               Welcome To SahabatDiri
             </h2>
+            
             <button
               className="w-full bg-gray-300 py-2 rounded-md mb-3"
               onClick={handleGoogleSignIn}

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
-import { auth } from "../firebaseConfig"; // Import konfigurasi Firebase
+import { Link, useNavigate } from "react-router-dom";
+import { auth } from "../firebaseConfig";
 import {
   signInWithEmailAndPassword,
   signInWithPopup,
@@ -17,7 +17,7 @@ const Login = () => {
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [verificationId, setVerificationId] = useState("");
-  const navigate = useNavigate(); // Initialize navigate
+  const navigate = useNavigate();
 
   // Handle Login with Email and Password
   const handleLogin = async () => {
@@ -25,7 +25,7 @@ const Login = () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       alert("Login successful!");
-      navigate("/dashboard"); // Redirect to dashboard
+      navigate("/dashboard");
     } catch (error) {
       alert(`Login failed: ${error.message}`);
     } finally {
@@ -40,7 +40,7 @@ const Login = () => {
       const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider);
       alert("Signed in with Google!");
-      navigate("/dashboard"); // Redirect to dashboard
+      navigate("/dashboard");
     } catch (error) {
       alert(`Google Sign-In failed: ${error.message}`);
     } finally {
@@ -79,7 +79,7 @@ const Login = () => {
       const credential = PhoneAuthProvider.credential(verificationId, otp);
       await auth.signInWithCredential(credential);
       alert("Login successful!");
-      navigate("/dashboard"); // Redirect to dashboard
+      navigate("/dashboard");
     } catch (error) {
       alert(`Verification failed: ${error.message}`);
     } finally {
@@ -89,12 +89,11 @@ const Login = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-primary">
-      {/* Header */}
       <div className="w-full max-w-4xl bg-white rounded-md shadow-md">
         <div className="p-5">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-3">
-              <img src="/logo.png" alt="Logo" className="h-10" />
+              <img src="logo.png" alt="Logo" className="h-10" />
               <h1 className="text-2xl font-bold font-custom text-textPrimary">
                 SahabatDiri
               </h1>
@@ -102,23 +101,16 @@ const Login = () => {
           </div>
         </div>
 
-        {/* Body */}
         <div className="flex">
-          {/* Left Section */}
           <div className="flex-1 p-10">
             <div className="bg-blue-200 p-5 rounded-lg shadow-inner">
               <h2 className="text-lg font-semibold text-textPrimary mb-3">
-                Care ur selff
+                
               </h2>
-              <img
-                src="/illustration.png"
-                alt="Illustration"
-                className="h-40 mx-auto"
-              />
+              <img src="/illustration.png" alt="Illustration" className="h-40 mx-auto" />
             </div>
           </div>
 
-          {/* Right Section */}
           <div className="flex-1 p-10">
             <h2 className="text-xl font-semibold text-textPrimary mb-5">
               Welcome Back To SahabatDiri
