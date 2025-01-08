@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/Project-Akhir-Tekweb/static/css/main.bab85724.css",
+    "main.js": "/Project-Akhir-Tekweb/static/js/main.ae131d60.js",
+    "index.html": "/Project-Akhir-Tekweb/index.html",
+    "main.bab85724.css.map": "/Project-Akhir-Tekweb/static/css/main.bab85724.css.map",
+    "main.ae131d60.js.map": "/Project-Akhir-Tekweb/static/js/main.ae131d60.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.bab85724.css",
+    "static/js/main.ae131d60.js"
+  ]
+}
